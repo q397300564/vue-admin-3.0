@@ -1,3 +1,8 @@
+// vue.config.js
+const path = require('path')
+
+const resolve = dir => path.join(__dirname, dir)
+
 module.exports = {
   // 基础路径
   publicPath: process.env.NODE_VUE === 'production' ? '' : '/',
@@ -54,7 +59,14 @@ module.exports = {
   /**
    * 对内部的 webpack 配置（比如修改、增加Loader选项）(链式操作)
    * **/
-  chainWebpack: () => { },
+  chainWebpack: config => {
+    config.resolve.alias // 添加别名
+      .set('@', resolve('src'))
+      .set('@assets', resolve('src/assets'))
+      .set('@components', resolve('src/components'))
+      .set('@views', resolve('src/views'))
+      .set('@store', resolve('src/store'))
+  },
   /**
    * 1. 如果这个值是一个对象，则会通过 webpack-merge 合并到最终的配置中.
    *

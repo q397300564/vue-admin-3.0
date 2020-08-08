@@ -67,14 +67,11 @@
 </template>
 
 <script>
-// vue3.0用啥就需要引用啥
-import { reactive, ref, onMounted } from '@vue/composition-api'
-
 export default {
   name: 'Login',
-  setup (props, { refs }) {
+  data () {
     // 用户名校验
-    let validateUsername = (rule, value, callback) => {
+    var validateUsername = (rule, value, callback) => {
       //邮箱规则
       let regEmail = /^([a-zA-Z0-9_-])+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-])+/
       if (value === '') {
@@ -88,7 +85,7 @@ export default {
     }
 
     // 密码校验
-    let validatePassword = (rule, value, callback) => {
+    var validatePassword = (rule, value, callback) => {
       // 密码规则 （密码至少包含 数字和英文，长度6-20）
       // eslint-disable-next-line no-unused-vars
       let regPassword = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/
@@ -102,9 +99,9 @@ export default {
     }
 
     // 确认密码校验
-    let validatePasswords = (rule, value, callback) => {
+    var validatePasswords = (rule, value, callback) => {
       // 如果 登录页面时 login, 直接通过
-      if (model.value === 'login') {
+      if (this.model === 'login') {
         callback()
       }
       // 密码规则 （密码至少包含 数字和英文，长度6-20）
@@ -112,7 +109,7 @@ export default {
       let regPassword = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/
       if (value === '') {
         callback(new Error('请再次输入密码'))
-      } else if (value !== loginForm.password) {
+      } else if (value != this.loginForm.password) {
         callback(new Error('请输入相同的密码'))
       } else {
         callback()
@@ -120,7 +117,7 @@ export default {
     }
 
     // 验证码校验
-    let checkCode = (rule, value, callback) => {
+    var checkCode = (rule, value, callback) => {
       // 验证码规则 (6位数的字母+数字)
       let regCode = /^[a-zA-Z0-9]{6}$/
       if (value === '') {
@@ -133,78 +130,61 @@ export default {
         }
       }
     }
-
-    // 这里面放置 data数据、 生命周期、自定义函数
-    // 单一对象使用
-    let menuTab = reactive([
-      { txt: '登录', current: true, type: 'login' },
-      { txt: '注册', current: false, type: 'register' }
-    ])
-    // 登录表单数据
-    let loginForm = reactive({
-      username: '',
-      password: '',
-      passwords: '',
-      code: ''
-    })
-    // 校验规则
-    let rules = reactive({
-      username: [{ validator: validateUsername, trigger: 'blur' }],
-      password: [{ validator: validatePassword, trigger: 'blur' }],
-      passwords: [{ validator: validatePasswords, trigger: 'blur' }],
-      code: [{ validator: checkCode, trigger: 'blur' }]
-    })
-    // 取值方式 menuTab.txt 就可以取到
-
-    // 单一基础数据类型
-    // 模块
-    let model = ref('login')
-
-    /**
-     * 声明函数
-     * **/
+    return {
+      menuTab: [
+        { txt: '登录', current: true, type: 'login' },
+        { txt: '注册', current: false, type: 'register' }
+      ],
+      // 模块
+      model: 'login',
+      // 登录表单数据
+      loginForm: {
+        username: '',
+        password: '',
+        passwords: '',
+        code: ''
+      },
+      // 校验规则
+      rules: {
+        username: [{ validator: validateUsername, trigger: 'blur' }],
+        password: [{ validator: validatePassword, trigger: 'blur' }],
+        passwords: [{ validator: validatePasswords, trigger: 'blur' }],
+        code: [{ validator: checkCode, trigger: 'blur' }]
+      }
+    }
+  },
+  methods: {
     // 菜单切换
-    let menuToggle = data => {
-      console.log(data)
+    menuToggle (data) {
       // 重置表单数据
-      loginForm.username = ''
-      loginForm.password = ''
-      loginForm.passwords = ''
-      loginForm.code = ''
+      this.loginForm = {
+        username: '',
+        password: '',
+        passwords: '',
+        code: ''
+      }
 
       // 循环遍历，取消所有的current状态
-      menuTab.forEach(elem => {
+      this.menuTab.forEach(elem => {
         elem.current = false
       })
+
       // 设置切换状态
       data.current = true
+
       // 设置模块
-      model.value = data.type
-    }
+      this.model = data.type
+    },
     // 提交表单
-    let submitForm = formName => {
-      refs[formName].validate(valid => {
+    submitForm (formName) {
+      this.$refs[formName].validate(valid => {
         if (valid) {
-          alert('submit')
+          alert('submit!')
         } else {
-          console.log('error submit')
+          console.log('error submit!!')
           return false
         }
       })
-    }
-    /**
-     * 生命周期
-     * **/
-    // 挂机完成后
-    onMounted(() => { })
-
-    return {
-      menuTab,
-      loginForm,
-      model,
-      rules,
-      menuToggle,
-      submitForm
     }
   }
 }

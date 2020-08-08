@@ -68,7 +68,7 @@
 
 <script>
 // vue3.0用啥就需要引用啥
-import { reactive, ref, onMounted } from '@vue/composition-api'
+import { reactive, ref, toRefs, isRef, onMounted } from '@vue/composition-api'
 
 export default {
   name: 'Login',

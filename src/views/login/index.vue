@@ -140,6 +140,8 @@ export default {
       { txt: '登录', current: true, type: 'login' },
       { txt: '注册', current: false, type: 'register' }
     ])
+    // 取值方式 menuTab.txt 就可以取到
+
     // 登录表单数据
     let loginForm = reactive({
       username: '',
@@ -154,7 +156,6 @@ export default {
       passwords: [{ validator: validatePasswords, trigger: 'blur' }],
       code: [{ validator: checkCode, trigger: 'blur' }]
     })
-    // 取值方式 menuTab.txt 就可以取到
 
     // 单一基础数据类型
     // 模块
@@ -198,6 +199,7 @@ export default {
     // 挂机完成后
     onMounted(() => { })
 
+    // 暴露给模板
     return {
       menuTab,
       loginForm,
